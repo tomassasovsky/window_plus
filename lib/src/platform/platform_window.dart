@@ -6,7 +6,6 @@
 
 import 'dart:ui';
 import 'dart:async';
-import 'package:meta/meta.dart';
 
 import 'package:window_plus/src/window_state.dart';
 import 'package:window_plus/src/models/monitor.dart';
@@ -20,38 +19,42 @@ class PlatformWindow extends WindowState {
   });
 
   /// Whether the window is activated.
-  @alwaysThrows
   Future<bool> get activated async {
     throw UnimplementedError();
   }
 
   /// Whether the window is minimized.
-  @alwaysThrows
   Future<bool> get minimized async {
     throw UnimplementedError();
   }
 
   /// Whether the window is maximized.
-  @alwaysThrows
   Future<bool> get maximized async {
     throw UnimplementedError();
   }
 
   /// Whether the window is fullscreen.
-  @alwaysThrows
   Future<bool> get fullscreen async {
     throw UnimplementedError();
   }
 
   /// Gets the position of the window on the screen.
-  @alwaysThrows
   Future<Offset> get position async {
     throw UnimplementedError();
   }
 
   /// Gets the size of the window on the screen.
-  @alwaysThrows
   Future<Rect> get size async {
+    throw UnimplementedError();
+  }
+
+  /// Whether the window is always on top.
+  Future<bool> get alwaysOnTop async {
+    throw UnimplementedError();
+  }
+
+  /// Gets the minimum size of the window on the screen.
+  Future<Size> get minimumSize async {
     throw UnimplementedError();
   }
 
@@ -90,12 +93,6 @@ class PlatformWindow extends WindowState {
 
   StreamController<Rect> sizeStreamController =
       StreamController<Rect>.broadcast();
-
-  /// Sets the window's fullscreen state.
-  @alwaysThrows
-  Future<void> setFullscreen(bool fullscreen) async {
-    throw UnimplementedError();
-  }
 
   /// Sets a function to handle window close events.
   /// This may be used to intercept the close event and perform some actions before closing the window
@@ -164,42 +161,50 @@ class PlatformWindow extends WindowState {
     singleInstanceArgumentsHandler = value;
   }
 
+  /// Enables or disables the always on top mode.
+  ///
+  /// If [enabled] is `true`, the window will be made topmost.
+  /// Once [enabled] is passed as `false` in future, window will be normal.
+  ///
+  Future<void> setIsAlwaysOnTop(bool enabled) async {
+    throw UnimplementedError();
+  }
+
   /// Enables or disables the fullscreen mode.
   ///
   /// If [enabled] is `true`, the window will be made fullscreen.
   /// Once [enabled] is passed as `false` in future, window will be restored back to it's prior state i.e. maximized or restored at same position & size.
   ///
-  @alwaysThrows
   Future<void> setIsFullscreen(bool enabled) async {
     throw UnimplementedError();
   }
 
+  /// Sets the minimum size of the window holding Flutter view.
+  Future<void> setMinimumSize(Size? size) async {
+    throw UnimplementedError();
+  }
+
   /// Maximizes the window holding Flutter view.
-  @alwaysThrows
   Future<void> maximize() async {
     throw UnimplementedError();
   }
 
   /// Restores the window holding Flutter view.
-  @alwaysThrows
   Future<void> restore() async {
     throw UnimplementedError();
   }
 
   /// Minimizes the window holding Flutter view.
-  @alwaysThrows
   Future<void> minimize() async {
     throw UnimplementedError();
   }
 
   /// Activates the window holding Flutter view.
-  @alwaysThrows
   Future<void> activate() async {
     throw UnimplementedError();
   }
 
   /// Deactivates the window holding Flutter view.
-  @alwaysThrows
   Future<void> deactivate() async {
     throw UnimplementedError();
   }
@@ -210,7 +215,6 @@ class PlatformWindow extends WindowState {
   ///
   /// If the set callback returns `false`, the window will not be closed.
   ///
-  @alwaysThrows
   Future<void> close() async {
     throw UnimplementedError();
   }
@@ -219,51 +223,42 @@ class PlatformWindow extends WindowState {
   ///
   /// This method does not respect the callback set by [setWindowCloseHandler] & does not save window state before exit.
   ///
-  @alwaysThrows
   Future<void> destroy() async {
     throw UnimplementedError();
   }
 
   /// Moves (or sets position of the window) holding Flutter view on the screen.
-  @alwaysThrows
   Future<void> move(int x, int y) async {
     throw UnimplementedError();
   }
 
   /// Resizes (or sets size of the window) holding Flutter view on the screen.
-  @alwaysThrows
   Future<void> resize(int width, int height) async {
     throw UnimplementedError();
   }
 
   /// Hides the window holding Flutter view.
-  @alwaysThrows
   Future<void> hide() async {
     throw UnimplementedError();
   }
 
   /// Shows the window holding Flutter view.
-  @alwaysThrows
   Future<void> show() async {
     throw UnimplementedError();
   }
 
-  @alwaysThrows
   Future<List<Monitor>> get monitors async {
     throw UnimplementedError();
   }
 
-  @alwaysThrows
   double get captionPadding {
     throw UnimplementedError();
   }
 
-  @alwaysThrows
   double get captionHeight {
     throw UnimplementedError();
   }
 
-  @alwaysThrows
   Size get captionButtonSize {
     throw UnimplementedError();
   }

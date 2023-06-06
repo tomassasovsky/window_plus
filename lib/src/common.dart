@@ -13,6 +13,8 @@ const String kMethodChannelName = 'com.alexmercerind/window_plus';
 // Common:
 
 const String kEnsureInitializedMethodName = 'ensureInitialized';
+const String kGetMinimumSizeMethodName = 'getMinimumSize';
+const String kSetMinimumSizeMethodName = 'setMinimumSize';
 const String kCloseMethodName = 'close';
 const String kDestroyMethodName = 'destroy';
 
@@ -29,6 +31,7 @@ const String kWindowResizedMethodName = 'windowResized';
 const String kWindowActivatedMethodName = 'windowActivated';
 const String kWindowMinimizedMethodName = 'windowMinimized';
 const String kWindowMaximizedMethodName = 'windowMaximized';
+const String kWindowFullScreenMethodName = 'windowFullScreen';
 
 // GTK Exclusives:
 

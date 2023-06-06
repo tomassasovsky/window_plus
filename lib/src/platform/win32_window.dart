@@ -6,13 +6,12 @@
 
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:ui';
 import 'dart:ffi' hide Size;
 import 'dart:async';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:win32/win32.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:window_plus/src/common.dart';
 import 'package:window_plus/src/models/monitor.dart';
@@ -91,6 +90,18 @@ class Win32Window extends PlatformWindow {
           }
           break;
         }
+      case kWindowFullScreenMethodName:
+        {
+          try {
+            fullscreenStreamController.add(await fullscreen);
+          } on AssertionError catch (_) {
+            // NOTE: [WindowsPlus.instance.hwnd] is `0` during fresh start until [WindowPlus.ensureInitialized] resolves.
+          } catch (exception, stacktrace) {
+            debugPrint(exception.toString());
+            debugPrint(stacktrace.toString());
+          }
+          break;
+        }
       case kSingleInstanceDataReceivedMethodName:
         {
           try {
@@ -150,12 +161,33 @@ class Win32Window extends PlatformWindow {
     return IsZoomed(hwnd) != 0;
   }
 
+  /// Gets the minimum size of the window on the screen.
+  @override
+  Future<Size> get minimumSize async {
+    assert_();
+    final Map<Object?, Object?> sizeMap = await channel.invokeMethod(
+      kGetMinimumSizeMethodName,
+    );
+    return Size(
+      (sizeMap['width'] as int).toDouble(),
+      (sizeMap['height'] as int).toDouble(),
+    );
+  }
+
   /// Whether the window is fullscreen.
   @override
   Future<bool> get fullscreen async {
     assert_();
     final style = GetWindowLongPtr(hwnd, GWL_STYLE);
     return !(style & WS_OVERLAPPEDWINDOW > 0);
+  }
+
+  /// Whether the window is always on top.
+  @override
+  Future<bool> get alwaysOnTop async {
+    assert_();
+    final style = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+    return (style & WS_EX_TOPMOST) > 0;
   }
 
   /// Gets the position of the window on the screen.
@@ -186,6 +218,24 @@ class Win32Window extends PlatformWindow {
     );
     calloc.free(rect);
     return result;
+  }
+
+  /// Sets the minimum size of the window holding Flutter view.
+  @override
+  Future<void> setMinimumSize(Size? size) async {
+    assert_();
+    try {
+      await channel.invokeMethod(
+        kSetMinimumSizeMethodName,
+        {
+          'width': size?.width ?? 0,
+          'height': size?.height ?? 0,
+        },
+      );
+    } catch (exception, stacktrace) {
+      debugPrint(exception.toString());
+      debugPrint(stacktrace.toString());
+    }
   }
 
   /// Enables or disables the fullscreen mode.
@@ -278,7 +328,8 @@ class Win32Window extends PlatformWindow {
         final shift = enableCustomFrame
             ? (_getSystemMetrics(SM_CYFRAME) +
                     _getSystemMetrics(SM_CXPADDEDBORDER)) *
-                window.devicePixelRatio ~/
+                WidgetsBinding
+                    .instance.platformDispatcher.views.first.devicePixelRatio ~/
                 1
             : 0;
         SetWindowPos(
@@ -296,6 +347,18 @@ class Win32Window extends PlatformWindow {
         calloc.free(rect);
       }
     }
+  }
+
+  /// Enables or disables the always on top mode.
+  ///
+  /// If [enabled] is `true`, the window will be made topmost.
+  /// Once [enabled] is passed as `false` in future, window will be normal.
+  ///
+  @override
+  Future<void> setIsAlwaysOnTop(bool enabled) async {
+    assert_();
+    final order = enabled ? HWND_TOPMOST : HWND_NOTOPMOST;
+    SetWindowPos(hwnd, order, NULL, NULL, NULL, NULL, SWP_NOMOVE | SWP_NOSIZE);
   }
 
   /// Maximizes the window holding Flutter view.
@@ -534,17 +597,22 @@ class Win32Window extends PlatformWindow {
                 index,
                 GetDpiForWindow(hwnd),
               ) /
-              window.devicePixelRatio;
+              WidgetsBinding
+                  .instance.platformDispatcher.views.first.devicePixelRatio;
         }
         // Non DPI aware API [GetSystemMetrics] on older Windows versions.
         else {
-          return GetSystemMetrics(index) / window.devicePixelRatio;
+          return GetSystemMetrics(index) /
+              WidgetsBinding
+                  .instance.platformDispatcher.views.first.devicePixelRatio;
         }
       } catch (exception, stacktrace) {
         // Fallback.
         debugPrint(exception.toString());
         debugPrint(stacktrace.toString());
-        return GetSystemMetrics(index) / window.devicePixelRatio;
+        return GetSystemMetrics(index) /
+            WidgetsBinding
+                .instance.platformDispatcher.views.first.devicePixelRatio;
       }
     }
     // Older Windows versions.

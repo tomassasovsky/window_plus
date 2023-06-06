@@ -10,6 +10,8 @@
 static constexpr auto kMethodChannelName = "com.alexmercerind/window_plus";
 
 static constexpr auto kEnsureInitializedMethodName = "ensureInitialized";
+static constexpr auto kGetMinimumSizeMethodName = "getMinimumSize";
+static constexpr auto kSetMinimumSizeMethodName = "setMinimumSize";
 static constexpr auto kWindowCloseReceivedMethodName = "windowCloseReceived";
 static constexpr auto kNotifyFirstFrameRasterizedMethodName =
     "notifyFirstFrameRasterized";
@@ -18,6 +20,7 @@ static constexpr auto kWindowResizedMethodName = "windowResized";
 static constexpr auto kWindowActivatedMethodName = "windowActivated";
 static constexpr auto kWindowMinimizedMethodName = "windowMinimized";
 static constexpr auto kWindowMaximizedMethodName = "windowMaximized";
+static constexpr auto kWindowFullScreenMethodName = "windowFullScreen";
 static constexpr auto kSingleInstanceDataReceivedMethodName =
     "singleInstanceDataReceived";
 static constexpr auto kWindows10RTM = 10240;

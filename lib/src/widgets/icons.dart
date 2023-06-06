@@ -4,7 +4,6 @@
 //
 // All rights reserved. Use of this source code is governed by MIT license that can be found in the LICENSE file.
 
-import 'dart:ui';
 import 'package:flutter/widgets.dart';
 
 class CloseIcon extends StatelessWidget {
@@ -191,4 +190,5 @@ Paint getPaint(Color color, [bool isAntiAlias = false]) => Paint()
   ..color = color
   ..style = PaintingStyle.stroke
   ..isAntiAlias = isAntiAlias
-  ..strokeWidth = 1.0 / window.devicePixelRatio;
+  ..strokeWidth = 1.0 /
+      WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio;
